@@ -5,7 +5,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 class MainPage:
-    #добавить элементы логотипов яндекса и самоката + 2 кнопки заказа //это надо будет во вторую страницу с проверками
 
     question_cost = [By.ID, 'accordion__heading-0']
     answer_cost = [By.XPATH, './/div[@id="accordion__panel-0"]/p']
@@ -34,6 +33,13 @@ class MainPage:
     def __init__(self, driver):
         self.driver = driver
 
+    #закрытие баннера с куками
+    def close_cookie_banner(self):
+        try:
+            self.driver.find_element(By.ID, 'rcc-confirm-button').click()
+        except Exception:
+            pass    
+
     #скролл до элемента
     def scroll_down(self, locator):
         element = self.driver.find_element(*locator)
@@ -42,9 +48,14 @@ class MainPage:
     #дождаться загрузки блока 
     def wait_for_load_questions_block(self, locator):
         WebDriverWait(self.driver, 5).until(expected_conditions.visibility_of_element_located(locator))
+
+    #дождаться кликабельности элемента 
+    def wait_for_clickable(self, locator):
+        WebDriverWait(self.driver, 10).until(expected_conditions.element_to_be_clickable(locator))    
         
     #клик на блок с ответом 
     def click_dropdown_with_anwser(self, locator):
+        self.wait_for_clickable(locator)
         self.driver.find_element(*locator).click()
        
     #шаг для разворота вопроса  
