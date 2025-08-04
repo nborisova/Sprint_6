@@ -1,7 +1,7 @@
-from selenium import webdriver
 from pages.form_page import FormPage
 import pytest
 import allure
+from utils.constants import BASE_URL, YANDEX_URL
 
 
 data = [
@@ -28,28 +28,21 @@ data = [
     ]
 
 class TestFormPage:
-    driver = None
-
-    @classmethod
-    def setup_class(cls):
-        cls.driver = webdriver.Firefox()
 
     @allure.title('Проверка верхней кнопки оформления заказа')
     @allure.description('Пользователь нажимает на кнопку и переходит к форме заказа')
-    def test_check_top_order_button(self):
-        self.driver.get('https://qa-scooter.praktikum-services.ru/')
-
-        form_page = FormPage(self.driver)
+    def test_check_top_order_button(self, driver):
+        form_page = FormPage(driver)
+        form_page.open_page(BASE_URL)
         order_button_top = form_page.order_button_top
         form_title = form_page.form_title
         form_page.check_top_order_button(order_button_top, form_title, 'Для кого самокат')
 
     @allure.title('Проверка нижней кнопки оформления заказа')
     @allure.description('Пользователь нажимает на кнопку и переходит к форме заказа')
-    def test_check_middle_order_button(self):
-        self.driver.get('https://qa-scooter.praktikum-services.ru/')
-
-        form_page = FormPage(self.driver)
+    def test_check_middle_order_button(self, driver):
+        form_page = FormPage(driver)
+        form_page.open_page(BASE_URL)
         logo_scooter = form_page.logo_scooter
         form_page.close_cookie_banner()
         order_button_middle = form_page.order_button_middle
@@ -59,32 +52,26 @@ class TestFormPage:
     @allure.title('Проверка успешного оформления заказа самоката')
     @allure.description('Пользователь заполняет форму и оформляет заказ')
     @pytest.mark.parametrize('data', data)
-    def test_check_order_form(self, data):
-        self.driver.get('https://qa-scooter.praktikum-services.ru/')  
-
-        form_page = FormPage(self.driver)
+    def test_check_order_form(self, driver, data):
+        form_page = FormPage(driver)
+        form_page.open_page(BASE_URL)
         order_button_top = form_page.order_button_top
         form_page.click_element(order_button_top)
         form_page.close_cookie_banner()
         form_page.fill_order_form(data)
-        order_placed_title = self.driver.find_element(*form_page.order_placed_title).text
+        order_placed_title = driver.find_element(*form_page.order_placed_title).text
 
         assert 'Заказ оформлен' in order_placed_title
 
     @allure.title('Проверка кнопок логотипа')
     @allure.description('Пользователь нажимает на логотип в хедере и переходит на соответствующий url')
     @pytest.mark.parametrize('locator, expected_url', [
-        ['logo_scooter', 'https://qa-scooter.praktikum-services.ru/'],
-        ['logo_yandex', 'https://dzen.ru']
+        ['logo_scooter', BASE_URL],
+        ['logo_yandex', YANDEX_URL]
     ])
-    def test_check_logo(self, locator, expected_url):
-        self.driver.get('https://qa-scooter.praktikum-services.ru/')  
-
-        form_page = FormPage(self.driver)
+    def test_check_logo(self, driver, locator, expected_url):
+        form_page = FormPage(driver)
+        form_page.open_page(BASE_URL)
         form_page.close_cookie_banner()
         locator_name = getattr(form_page, locator)
         form_page.check_logo(locator_name, expected_url)        
-
-    @classmethod
-    def teardown_class(cls):
-        cls.driver.quit()
