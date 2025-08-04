@@ -37,31 +37,31 @@ class BasePage:
     def enter_data(self, locator, data):
         self.driver.find_element(*locator).send_keys(data)
 
-    #заполнение формы данными
-    def fill_order_form(self, data):
-        self.enter_data(self.name_field, data['name'])
-        self.enter_data(self.surname_field, data['surname'])
-        self.enter_data(self.address_field, data['address'])
-        self.click_element(self.metro_field)
-        metro_input = self.driver.find_element(*self.metro_field)
-        metro_input.send_keys(data["metro"])
-        metro_input.send_keys(Keys.ARROW_DOWN)
-        metro_input.send_keys(Keys.ENTER)
-        self.wait_for_load_element(self.phone_field)
-        self.enter_data(self.phone_field, data['phone'])
+    # #заполнение формы данными
+    # def fill_order_form(self, data):
+    #     self.enter_data(self.name_field, data['name'])
+    #     self.enter_data(self.surname_field, data['surname'])
+    #     self.enter_data(self.address_field, data['address'])
+    #     self.click_element(self.metro_field)
+    #     metro_input = self.driver.find_element(*self.metro_field)
+    #     metro_input.send_keys(data["metro"])
+    #     metro_input.send_keys(Keys.ARROW_DOWN)
+    #     metro_input.send_keys(Keys.ENTER)
+    #     self.wait_for_load_element(self.phone_field)
+    #     self.enter_data(self.phone_field, data['phone'])
 
-        self.click_element(self.next_button)
+    #     self.click_element(self.next_button)
 
-        self.enter_data(self.delivery_date_field, data['delivery_date'])
-        form_title = self.driver.find_element(By.XPATH, './/div[text()="Про аренду"]')
-        form_title.click()
-        WebDriverWait(self.driver, 5).until(expected_conditions.invisibility_of_element_located((By.CLASS_NAME, 'react-datepicker__month-container')))
-        self.scroll_down(self.rental_period_field)
-        self.click_element(self.rental_period_field)
-        rental_period_option = [By.XPATH, f'.//div[@class="Dropdown-option" and text()="{data["rental_period"]}"]']
-        self.click_element(rental_period_option)
-        scooter_color_option = [By.ID, f'{data["scooter_color"]}']
-        self.click_element(scooter_color_option)
+    #     self.enter_data(self.delivery_date_field, data['delivery_date'])
+    #     form_title = self.driver.find_element(By.XPATH, './/div[text()="Про аренду"]')
+    #     form_title.click()
+    #     WebDriverWait(self.driver, 5).until(expected_conditions.invisibility_of_element_located((By.CLASS_NAME, 'react-datepicker__month-container')))
+    #     self.scroll_down(self.rental_period_field)
+    #     self.click_element(self.rental_period_field)
+    #     rental_period_option = [By.XPATH, f'.//div[@class="Dropdown-option" and text()="{data["rental_period"]}"]']
+    #     self.click_element(rental_period_option)
+    #     scooter_color_option = [By.ID, f'{data["scooter_color"]}']
+    #     self.click_element(scooter_color_option)
 
-        self.click_element(self.complete_order_button)
-        self.click_element(self.order_confirmation_button)
+    #     self.click_element(self.complete_order_button)
+    #     self.click_element(self.order_confirmation_button)
